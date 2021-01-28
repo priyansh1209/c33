@@ -7,9 +7,10 @@ var engine, world;
 var box1, pig1;
 var backgroundImg,platform;
 var bird, slingShot;
+var gameState = "onSlingshot"
 
 function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
+    getTime() 
 }
 
 function setup(){
@@ -43,7 +44,8 @@ function setup(){
 }
 
 function draw(){
-    background(backgroundImg);
+    if(backgroundImg)
+        background(backgroundImg);
     Engine.update(engine);
     //strokeWeight(4);
     box1.display();
@@ -64,20 +66,39 @@ function draw(){
     bird.display();
     platform.display();
     //log6.display();
-    slingshot.display();    
+    slingshot.display();   
+    
 }
 
 function mouseDragged(){
+    if(gameState !== "offSling"){
     Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
+    }
 }
 
 
 function mouseReleased(){
     slingshot.fly();
+    gameState = "offSling"
 }
 
 function keyPressed(){
 if(keyCode === 114 || keyCode === 82){
     slingshot.reattach(bird.body)
+    gameState = "onSlingshot"
 }
+}
+
+async function getTime(){
+    var time = await fetch("https://worldtimeapi.org/api/timezone/Australia/Melbourne")
+    var timeJson = await time.json()
+    var dt = timeJson.datetime
+    var hr = dt.slice(11,13)
+    console.log(hr)
+    if(hr >= 6 && hr <= 21){
+        bg="sprites/bg.png"
+    }else{
+        bg="sprites/bg2.jpg"
+    }
+    backgroundImg = loadImage(bg); 
 }
