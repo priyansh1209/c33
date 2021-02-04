@@ -86,6 +86,9 @@ function keyPressed(){
 if(keyCode === 114 || keyCode === 82){
     slingshot.reattach(bird.body)
     gameState = "onSlingshot"
+    bird.trajectory = []
+    Matter.Body.setPosition(bird.body, {x: 200 , y: 50});
+
 }
 }
 
